@@ -1,4 +1,4 @@
-
+nodemon
 const express = require('express');
 const router = express.Router();
 const morgan = require('morgan');
@@ -47,6 +47,18 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   res.status(201).json(item);
 });
 
+app.post('/recipes', jsonParser, (req, res) => {
+  const requiredFields = ['dish', 'ingredients'];
+  for(let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.Body)) {
+      const message = `Missing\`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  const item = Recipes.create(req.body.dish, request.body.ingredients);
+  res.status(201).json(item);
 
 app.get('/recipes', (req, res) => {
   res.json(Recipes.get());
